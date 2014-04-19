@@ -39,7 +39,7 @@ void setup() {
     FileSystem.begin();
 
     // Wait until a Serial Monitor is connected.
-    while (!Serial);
+    // while (!Serial);
 
     randomSeed(analogRead(0));
 }
