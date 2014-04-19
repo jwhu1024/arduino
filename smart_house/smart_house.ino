@@ -13,7 +13,7 @@
 static const char *led_path    = "/tmp";
 static const char *door_path   = "/tmp/door";
 
-int ledPins[][3] =
+short ledPins[][3] =
 {
     /* Pin   , New stat, Old state*/
     { LED_11 , LED_OFF , LED_OFF },
@@ -21,11 +21,11 @@ int ledPins[][3] =
     { LED_13 , LED_OFF , LED_OFF }
 };
 
-static unsigned int led_tbl_sz = (sizeof(ledPins) / sizeof(ledPins[0]));
+static short led_tbl_sz = (sizeof(ledPins) / sizeof(ledPins[0]));
 
 void setup() {
     // initialize the digital pin as an output.
-    for (int led = 0; led < led_tbl_sz; led++) {
+    for (short led = 0; led < led_tbl_sz; led++) {
         pinMode(ledPins[led][LED_PIN_IDX], OUTPUT);
     }
   
@@ -44,7 +44,7 @@ void setup() {
     randomSeed(analogRead(0));
 }
 
-void led_update(int idx, int ret) {
+void led_update(short idx, int ret) {
     ledPins[idx][LED_NEW_STATE_IDX] = (ret == 1) ? LED_ON : LED_OFF;
     if (ledPins[idx][LED_NEW_STATE_IDX] == ledPins[idx][LED_OLD_STATE_IDX]) {
         // Serial.println("Status NOT change, do nothing");
@@ -72,7 +72,7 @@ void read_led_data(char *fp, String &data) {
 }
 
 void runLedHandler() {
-    for (int idx = 0; idx < led_tbl_sz; idx++) {
+    for (short idx = 0; idx < led_tbl_sz; idx++) {
         String buf = "";
         char fp[MAX_PATH]={0};
 
@@ -91,7 +91,7 @@ void runLedHandler() {
 
 void runDoorHandler() {
     /* dummy data */
-    int door_inst = random(0, 5);
+    short door_inst = random(0, 5);
     /* dummy data */
 
     File door = FileSystem.open(door_path, FILE_WRITE);
