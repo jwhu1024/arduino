@@ -8,6 +8,7 @@
 #define LED_PIN_IDX         0
 #define LED_NEW_STATE_IDX   1
 #define LED_OLD_STATE_IDX   2
+#define LIMIT_SWITCH_PIN    3  // digital
 #define MAX_PATH            16
 
 static const char *led_path    = "/tmp";
@@ -28,6 +29,9 @@ void setup() {
     for (short led = 0; led < led_tbl_sz; led++) {
         pinMode(ledPins[led][LED_PIN_IDX], OUTPUT);
     }
+
+    // set pin as input
+    pinMode(LIMIT_SWITCH_PIN , INPUT);
   
     // Initialize the Bridge
     Bridge.begin();
@@ -90,13 +94,11 @@ void runLedHandler() {
 }
 
 void runDoorHandler() {
-    /* dummy data */
-    short door_inst = random(0, 5);
-    /* dummy data */
-
+    /* 1 : open , 0 : close */
+    short limit_val = digitalRead(LIMIT_SWITCH_PIN);
     File door = FileSystem.open(door_path, FILE_WRITE);
     if (door) {
-        door.println(door_inst);
+        door.println(limit_val);
     }
     door.close();
 }
