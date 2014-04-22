@@ -8,7 +8,7 @@
 #define LED_PIN_IDX         0
 #define LED_NEW_STATE_IDX   1
 #define LED_OLD_STATE_IDX   2
-#define LIMIT_SWITCH_PIN    3  // digital
+#define LIMIT_SWITCH_PIN    A3
 #define MAX_PATH            16
 
 static const char *led_path    = "/tmp";
@@ -37,7 +37,7 @@ void setup() {
     Bridge.begin();
     
     // Initialize the Serial
-    Serial.begin(9600);
+    // Serial.begin(9600);
 
     // Setup File IO
     FileSystem.begin();
@@ -60,6 +60,15 @@ void led_update(short idx, int ret) {
 
     // save status
     ledPins[idx][LED_OLD_STATE_IDX] = ledPins[idx][LED_NEW_STATE_IDX];
+
+    // write out the old status for query
+    char fp[MAX_PATH]={0};
+    sprintf(fp, "%s/%d_old", led_path, ledPins[idx][LED_PIN_IDX]);
+    File leds = FileSystem.open(fp, FILE_WRITE);
+    if (leds) {
+        leds.println(ledPins[idx][LED_OLD_STATE_IDX]);
+    }
+    leds.close();
     return;
 }
 
@@ -91,6 +100,7 @@ void runLedHandler() {
             led_update(idx, buf.toInt());
         }
     }
+    return;
 }
 
 void runDoorHandler() {
@@ -101,6 +111,7 @@ void runDoorHandler() {
         door.println(limit_val);
     }
     door.close();
+    return;
 }
 
 void loop() {
