@@ -35,17 +35,15 @@ void setup() {
   
     // Initialize the Bridge
     Bridge.begin();
+
+    // Setup File IO
+    FileSystem.begin();
     
     // Initialize the Serial
     // Serial.begin(9600);
 
-    // Setup File IO
-    FileSystem.begin();
-
     // Wait until a Serial Monitor is connected.
     // while (!Serial);
-
-    randomSeed(analogRead(0));
 }
 
 void led_update(short idx, int ret) {
@@ -104,11 +102,10 @@ void runLedHandler() {
 }
 
 void runDoorHandler() {
-    /* 1 : open , 0 : close */
-    short limit_val = digitalRead(LIMIT_SWITCH_PIN);
+    /* 1 : close , 0 : open */
     File door = FileSystem.open(door_path, FILE_WRITE);
     if (door) {
-        door.println(limit_val);
+        door.println(digitalRead(LIMIT_SWITCH_PIN));
     }
     door.close();
     return;
