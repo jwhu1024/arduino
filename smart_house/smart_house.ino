@@ -13,6 +13,10 @@
 
 static const char *led_path    = "/tmp";
 static const char *door_path   = "/tmp/door";
+static const char *photo_path   = "/tmp/photo";
+
+int photocellPin = 1;
+int photocellVal = 0;
 
 short ledPins[][3] =
 {
@@ -111,9 +115,21 @@ void runDoorHandler() {
     return;
 }
 
+void runPhotoCellHandler() {
+    /* 1 : close , 0 : open */
+    File photo = FileSystem.open(photo_path, FILE_WRITE);
+    if (photo) {
+        photo.println(analogRead(photocellPin));
+    }
+    photo.close();
+    return;
+}
+
 void loop() {
     runLedHandler();
-    delay(500);
+    delay(300);
+    runPhotoCellHandler();
+    delay(300);
     runDoorHandler();
-    delay(500);
+    delay(300);
 }
