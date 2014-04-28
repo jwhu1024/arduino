@@ -8,14 +8,14 @@
 #define LED_PIN_IDX         0
 #define LED_NEW_STATE_IDX   1
 #define LED_OLD_STATE_IDX   2
-#define LIMIT_SWITCH_PIN    A3
+#define LIMIT_SWITCH_PIN    A1
 #define MAX_PATH            16
 
 static const char *led_path    = "/tmp";
 static const char *door_path   = "/tmp/door";
 static const char *photo_path   = "/tmp/photo";
 
-int photocellPin = 1;
+int photocellPin = A2;
 int photocellVal = 0;
 
 short ledPins[][3] =
@@ -35,7 +35,7 @@ void setup() {
     }
 
     // set pin as input
-    pinMode(LIMIT_SWITCH_PIN , INPUT);
+    // pinMode(LIMIT_SWITCH_PIN , INPUT);
   
     // Initialize the Bridge
     Bridge.begin();
@@ -106,6 +106,8 @@ void runLedHandler() {
 }
 
 void runDoorHandler() {
+    // Serial.print("door");
+    // Serial.println(digitalRead(LIMIT_SWITCH_PIN));
     /* 1 : close , 0 : open */
     File door = FileSystem.open(door_path, FILE_WRITE);
     if (door) {
@@ -116,6 +118,8 @@ void runDoorHandler() {
 }
 
 void runPhotoCellHandler() {
+    // Serial.print("photo");
+    // Serial.println(analogRead(photocellPin));
     /* 1 : close , 0 : open */
     File photo = FileSystem.open(photo_path, FILE_WRITE);
     if (photo) {
